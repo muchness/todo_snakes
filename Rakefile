@@ -1,6 +1,5 @@
 require 'rake'
 require 'rspec/core/rake_task'
-
 require_relative 'config/application'
 
 desc "create the database"
@@ -13,6 +12,24 @@ desc "drop the database"
 task "db:drop" do
   puts "Deleting #{DB_PATH}..."
   rm_f DB_PATH
+end
+
+desc 'generate migration file skeleton'
+task 'generate:migration' do
+  migration_name = ARGV.last
+  camelized_migration_name = migration_name.split('_').map {|w| w.capitalize}.join
+  directory = File.dirname(__FILE__) + '/db/migrate/'
+  filepath = "#{directory + Time.now.strftime('%Y%m%d%H%M%S')}_#{migration_name}.rb"
+
+
+  filecontents =
+    "class #{camelized_migration_name} < ActiveRecord::Migration\n" +
+    "  # this is for you to implement :)\n" +
+    "end"
+
+  File.open(filepath, 'w') { |file| file.write(filecontents) }
+
+  task ARGV.last.to_sym do ; end
 end
 
 desc "migrate the database (options: VERSION=x, VERBOSE=false, SCOPE=blog)."
