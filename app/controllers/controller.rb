@@ -1,4 +1,5 @@
-# require
+require './../models/task'
+require './../viewer/viewer'
 
 class Controller
 
@@ -25,8 +26,7 @@ class Controller
 
 
   def list
-    puts 'Task.all'
-    Viewer.render()
+    Viewer.render
   end
 
 
@@ -34,15 +34,16 @@ class Controller
     # puts 'add'
     # puts ARGV[1]
    # ARGV.shift
-    p "Task.create(:description => ARGV[1,ARGV.length].join(" "))"
+    Task.create(:description => ARGV[1,ARGV.length].join(" "))
+    Viewer.render
   end
 
 
   def delete
-    puts 'delete'
     to_delete = ARGV[1].to_i - 1
     all_tasks = Task.all
     all_tasks[to_delete].destroy
+    Viewer.render
   end
 
 
